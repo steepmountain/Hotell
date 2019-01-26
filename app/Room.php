@@ -2,7 +2,9 @@
 
 namespace App;
 
-class Room
+use Illuminate\Database\Eloquent\Model;
+
+class Room extends Model
 {
 
     /**
@@ -13,4 +15,7 @@ class Room
     protected $fillable = [
         'roomId', 'hotelId'
     ];
+
+    protected $primaryKey = 'roomId';
+    public $timestamps = false;
 }

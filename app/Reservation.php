@@ -2,7 +2,9 @@
 
 namespace App;
 
-class Hotel
+use Illuminate\Database\Eloquent\Model;
+
+class Reservation extends Model
 {
 
     /**
@@ -13,4 +15,7 @@ class Hotel
     protected $fillable = [
         'reservationId', 'roomId', 'personId', 'toDate', 'fromDate'
     ];
+
+    protected $primaryKey = 'reservationId';
+    public $timestamps = false;
 }

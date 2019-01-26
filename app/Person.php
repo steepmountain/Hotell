@@ -2,7 +2,9 @@
 
 namespace App;
 
-class Person
+use Illuminate\Database\Eloquent\Model;
+
+class Person extends Model
 {
 
     /**
@@ -13,4 +15,8 @@ class Person
     protected $fillable = [
         'personId', 'firstName', 'lastName', 'phone', 'email'
     ];
+
+    protected $table = 'people';
+    protected $primaryKey = 'personId';
+    public $timestamps = false;
 }
