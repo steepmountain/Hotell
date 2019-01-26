@@ -11,6 +11,6 @@ class Hotel
      * @var array
      */
     protected $fillable = [
-        'id', 'roomId', 'personId', 'toDate', 'fromDate'
+        'reservationId', 'roomId', 'personId', 'toDate', 'fromDate'
     ];
 }

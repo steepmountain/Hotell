@@ -11,6 +11,6 @@ class Person
      * @var array
      */
     protected $fillable = [
-        'id', 'firstName', 'lastName', 'phone', 'email'
+        'personId', 'firstName', 'lastName', 'phone', 'email'
     ];
 }

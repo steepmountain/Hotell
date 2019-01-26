@@ -11,6 +11,6 @@ class Hotel
      * @var array
      */
     protected $fillable = [
-        'id', 'name', 'city', 'numRooms', 'price'
+        'hotelId', 'name', 'city', 'numRooms', 'price'
     ];
 }
