@@ -6,7 +6,11 @@ use App\Http\Controllers\Controller;
 
 class ReservationController extends Controller
 {
-    public function index() {
-        return view('reservation.index');
+    public function create() {
+        return view('reservation.create');
+    }
+
+    public function search() {
+        return view('reservation.search');
     }
 }
