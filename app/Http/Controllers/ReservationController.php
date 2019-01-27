@@ -10,7 +10,11 @@ class ReservationController extends Controller
     public function create()
     {
         $cities = App\Hotel::select('city')
-            ->distinct();
+            ->distinct()
+            ->get();
+
+        dump($cities);
+
         return view('reservation.create', ['cities' => $cities]);
     }
 
