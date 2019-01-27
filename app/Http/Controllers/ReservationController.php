@@ -13,8 +13,6 @@ class ReservationController extends Controller
             ->distinct()
             ->get();
 
-        dump($cities);
-
         return view('reservation.create', ['cities' => $cities]);
     }
 
