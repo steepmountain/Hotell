@@ -15,7 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('reservation')->group(function() {
-	Route::get('create', 'ReservationController@create');
-	Route::get('search', 'ReservationController@search');
+Route::prefix('reservation')->group(function () {
+    Route::get('create', 'ReservationController@create');
+    Route::post('createReservation', 'ReservationController@createReservation');
+
+    Route::get('search', 'ReservationController@search');
 });
