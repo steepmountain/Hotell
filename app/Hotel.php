@@ -18,4 +18,8 @@ class Hotel extends Model
 
     protected $primaryKey = 'hotelId';
     public $timestamps = false;
+
+    public function rooms() {
+        return $this->hasMany('App\Room', 'hotelId');
+    }
 }

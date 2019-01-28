@@ -19,4 +19,8 @@ class Person extends Model
     protected $table = 'people';
     protected $primaryKey = 'personId';
     public $timestamps = false;
+
+    public function reservations() {
+        return $this->hasMany('App\Reservation', 'personId');
+    }
 }

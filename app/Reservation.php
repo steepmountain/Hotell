@@ -18,4 +18,12 @@ class Reservation extends Model
 
     protected $primaryKey = 'reservationId';
     public $timestamps = false;
+
+    public function person() {
+        return $this->belongsTo('App\Person', 'reservationId');
+    }
+
+    public function room() {
+        return $this->belongsTo('App\Room', 'reservationId');
+    }
 }
