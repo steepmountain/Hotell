@@ -73,17 +73,13 @@ class ReservationHelpers
         ->first();
 
         if ($person == null) {
-            $id = DB::table('people')
-                ->insertGetId([
-                    'firstName' => $firstName,
-                    'lastName' => $lastName,
-                    'email' => $email,
-                    'phone' => $phone,
-                ]
-                );
 
-            $person = App\Person::where('personId', '=', $id)
-                ->first();
+            $person = App\Person::create([
+                'firstName' => $firstName,
+                'lastName' => $lastName,
+                'email' => $email,
+                'phone' => $phone
+            ]);
         }
 
         return $person;
