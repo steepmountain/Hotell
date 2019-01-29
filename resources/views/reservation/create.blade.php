@@ -31,28 +31,32 @@
         <select name="hotel" id="hotel">
             <option value="default">Velg hotell</option>
             @foreach ($hotels as $hotel)
-                <option value="{{$hotel->hotelId}}">{{$hotel->name}}</option>
+                <option value="{{$hotel->hotelId}}"
+                    {{($hotelId == $hotel->hotelId) ||
+                    (old('hotel') == $hotel->hotelId) ? "selected" : ""}}>
+                    {{$hotel->name}}
+                </option>
             @endforeach
     </select>
     </div>
 
     <div class="form-group">
         <label>Antall rom*</label>
-        <input type="number" name="numRooms" id="numRooms" min="1" value="{{old('numRooms')}}">
+        <input type="number" name="numRooms" id="numRooms" min="1" value="{{$numRooms != null ? $numRooms : old('numRooms')}}">
     </div>
 
     <div class="form-group">
         <label>Fra*</label>
-        <input type="date" name="fromDate" id="fromDate" value="{{old('fromDate')}}"">
+        <input type="date" name="fromDate" id="fromDate" value="{{$fromDate != null ? $fromDate : old('fromDate')}}">
     </div>
 
-    <div class="form-group">
+    <div class="form-group ">
         <label>Til*</label>
-        <input type="date" name="toDate" id="toDate" value="{{old('toDate')}}"">
+        <input type="date" name="toDate" id="toDate " value="{{$toDate != null ? $toDate : old( 'toDate')}}" ">
     </div>
 
-    <button type="submit" value="submit">Reserver</button> @if ($errors->any())
-    <div class="alert alert-danger">
+    <button type="submit " value="submit ">Reserver</button> @if ($errors->any())
+    <div class="alert alert-danger ">
         <ul>
             @foreach ($errors->all() as $error)
             <p>{{ $error }}

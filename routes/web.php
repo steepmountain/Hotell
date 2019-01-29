@@ -20,4 +20,5 @@ Route::prefix('reservation')->group(function () {
     Route::post('createReservation', 'ReservationController@createReservation');
 
     Route::get('search', 'ReservationController@search');
+    Route::post('performSearch', 'ReservationController@performSearch');
 });
