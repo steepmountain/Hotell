@@ -13,7 +13,7 @@ use Illuminate\Validation\Rule;
  * Kommentarer til meg selv
  *      Passer $request rundt mindre.
  *      Lag servicer som gjør mindre biter av arbeidet utenfor controller
-*/
+ */
 
 class ReservationController extends Controller
 {
@@ -24,6 +24,11 @@ class ReservationController extends Controller
             ->get();
 
         return view('reservation.create', ['hotels' => $hotels]);
+    }
+
+    public function search()
+    {
+        return view('reservation.search');
     }
 
     public function createReservation(Request $request)
@@ -61,15 +66,8 @@ class ReservationController extends Controller
 
         return view('reservation.success',
             ['reservations' => $reservations,
-            'hotel' => $hotel->name,
-            'price' => $hotel->price * count($reservations)
+                'hotel' => $hotel->name,
+                'price' => $hotel->price * count($reservations),
             ]);
     }
-
-    public function search()
-    {
-        return view('reservation.search');
-    }
-
-
 }
