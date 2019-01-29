@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App;
 use App\Helpers;
+use App\Helpers\ReservationHelpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -56,8 +57,7 @@ class ReservationController extends Controller
         ]);
 
         $checkPrice = $request->maxPrice != null ? $request->maxPrice : PHP_INT_MAX;
-        $hotels = DB::table('hotels')
-            ->where('city', '=', $request->city)
+        $hotels = App\Hotel::where('city', '=', $request->city)
             ->where('price', '<=', $checkPrice)
             ->orderBy('price', 'asc')
             ->get();
@@ -66,7 +66,7 @@ class ReservationController extends Controller
         // TODO: group free rooms by hotel and attach them to the model
         // $availableRoomIds = array();
         // foreach ($hotels as $hotel) {
-        //     $tmp = App\Helpers\ReservationHelpers::availableRoomsInRange($request->toDate, $request->fromDate, $hotel->hotelId);
+        //     $tmp = ReservationHelpers::availableRoomsInRange($request->toDate, $request->fromDate, $hotel->hotelId);
         //     $availableRoomIds = array_merge($availableRoomIds, $tmp);
         // }
         // $availableRooms = DB::table('rooms')
@@ -100,9 +100,8 @@ class ReservationController extends Controller
         ]);
 
         // all reservations with this hotel's rooms in the given time frame
-        $available = App\Helpers\ReservationHelpers::availableRoomsInRange($request->toDate, $request->fromDate, $request->hotel);
-        $availableFiltered = DB::table('rooms')
-            ->whereIn('roomId', $available)
+        $available = ReservationHelpers::availableRoomsInRange($request->toDate, $request->fromDate, $request->hotel);
+        $availableFiltered = App\Room::whereIn('roomId', $available)
             ->get();
 
         // TODO: Match numRooms mot enoughRooms. lag en custom rule og send tilbake til view.
@@ -111,11 +110,10 @@ class ReservationController extends Controller
             abort(500);
         }
 
-        $person = App\Helpers\ReservationHelpers::createOrGetPerson($request);
-        $reservations = App\Helpers\ReservationHelpers::insertReservation($request, $person->personId, $request->numRooms);
+        $person = ReservationHelpers::createOrGetPerson($request);
+        $reservations = ReservationHelpers::insertReservation($request, $person->personId, $request->numRooms);
 
-        $hotel = DB::table('hotels')
-            ->where('hotelId', '=', $request->hotel)
+        $hotel = App\Hotel::where('hotelId', '=', $request->hotel)
             ->first();
 
         return view('reservation.success',

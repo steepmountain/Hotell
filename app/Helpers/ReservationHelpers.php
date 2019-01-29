@@ -26,15 +26,13 @@ class ReservationHelpers
             $reservations[] = $id;
         };
 
-        return DB::table('reservations')
-            ->whereIn('reservationId', $reservations)
+        return App\Reservation::whereIn('reservationId', $reservations)
             ->get();
     }
 
     public static function availableRoomsInRange($to, $from, $hotel)
     {
-        $reserved = DB::table('reservations')
-            ->select('roomId')
+        $reserved = App\Reservation::select('roomId')
             ->where('reservations.toDate', '>=', $from)
             ->where('reservations.fromDate', '<=', $to)
             ->get();
@@ -45,8 +43,7 @@ class ReservationHelpers
             $reservedIds[] = (int) $id->roomId;
         }
 
-        $available = DB::table('rooms')
-            ->select('roomId')
+        $available = App\Room::select('roomId')
             ->where('hotelId', $hotel)
             ->whereNotIn('roomId', $reservedIds)
             ->get();
@@ -85,8 +82,7 @@ class ReservationHelpers
                 ]
                 );
 
-            $person = DB::table('people')
-                ->where('personId', '=', $id)
+            $person = App\Person::where('personId', '=', $id)
                 ->first();
         }
 
