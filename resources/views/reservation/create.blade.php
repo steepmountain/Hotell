@@ -31,7 +31,7 @@
         <select name="hotel" id="hotel">
             <option value="default">Velg hotell</option>
             @foreach ($hotels as $hotel)
-                <option value="{{$hotel->name}}">{{$hotel->name}}</option>
+                <option value="{{$hotel->hotelId}}">{{$hotel->name}}</option>
             @endforeach
     </select>
     </div>
@@ -43,12 +43,12 @@
 
     <div class="form-group">
         <label>Fra*</label>
-        <input type="date" name="fromDate" id="fromDate" {{old('fromDate')}}>
+        <input type="date" name="fromDate" id="fromDate" value="{{old('fromDate')}}"">
     </div>
 
     <div class="form-group">
         <label>Til*</label>
-        <input type="date" name="toDate" id="toDate" {{old('toDate')}}>
+        <input type="date" name="toDate" id="toDate" value="{{old('toDate')}}"">
     </div>
 
     <button type="submit" value="submit">Reserver</button> @if ($errors->any())

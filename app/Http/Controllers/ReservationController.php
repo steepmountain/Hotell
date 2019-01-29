@@ -3,16 +3,24 @@
 namespace App\Http\Controllers;
 
 use App;
+use App\Helpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+
+/**
+ * Kommentarer til meg selv
+ *      Passer $request rundt mindre.
+ *      Lag servicer som gjør mindre biter av arbeidet utenfor controller
+*/
 
 class ReservationController extends Controller
 {
     public function create()
     {
-        $hotels = App\Hotel::select('name')
-            ->distinct()
+        $hotels = App\Hotel::select('name', 'hotelId')
+            ->distinct('name')
             ->get();
 
         return view('reservation.create', ['hotels' => $hotels]);
@@ -20,17 +28,23 @@ class ReservationController extends Controller
 
     public function createReservation(Request $request)
     {
+        // all reservations with this hotel's rooms in the given time frame
+        $available = App\Helpers\ReservationHelpers::availableRoomsInRange($request->toDate, $request->fromDate, $request->hotel);
+        $availableFiltered = DB::table('rooms')
+            ->whereIn('roomId', $available)
+            ->get();
 
-        //TODO: sanitize
+        // TODO: Match numRooms mot enoughRooms. lag en custom rule og send tilbake til view.
+        $enoughRooms = $availableFiltered >= $request->numRooms;
 
         $validated = $request->validate([
             'firstName' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone' => 'required|alpha_num',
-            'city' => [
+            'hotel' => [
                 'required',
-                'string',
+                'alpha_num',
                 Rule::notIn(['default']),
             ],
             'numRooms' => 'required|digits_between:1,100|integer',
@@ -38,50 +52,24 @@ class ReservationController extends Controller
             'toDate' => 'required|date|after:fromDate',
         ]);
 
-        // TODO: Checks if any rooms are actually available
-        // get the count of rooms in the hotel. see if the number of reservations in the time between fromDate and toDate is smaller than this number
+        $person = App\Helpers\ReservationHelpers::createOrGetPerson($request);
+        $reservations = App\Helpers\ReservationHelpers::insertReservation($request, $person->personId, $request->numRooms);
 
-        // TODO: Extract all this to person service
-        $firstName = filter_var($request->firstName, FILTER_SANITIZE_STRING);
-        $lastName =filter_var($request->lastName, FILTER_SANITIZE_STRING);
-        $email =filter_var($request->email, FILTER_SANITIZE_STRING);
-        $phone = filter_var($request->phone, FILTER_SANITIZE_STRING);
+        $hotel = DB::table('hotels')
+            ->where('hotelId', '=', $request->hotel)
+            ->first();
 
-        // Get or create person
-        $person = DB::table('people')
-            ->where([
-                ['firstName', '=', $firstName],
-                ['lastName', '=', $lastName],
-                ['email', '=', $email],
-                ['phone', '=', $phone]
-            ])
-            ->first()
-            ->get();
-
-        if ($person == null) {
-            $id = DB::table('people')
-                ->insert([
-                    'firstName' => $firstName,
-                    'lastName' => $lastName,
-                    'email' => $email,
-                    'phone' => $phone
-                    ]
-                );
-            $person = DB::table('people')
-                ->where('id', '=', $id)
-                ->first()
-                ->get();
-        }
-
-        // TODO: Extract all this to reservation service
-        // Create a person if they don't exist
-        // Create a reservation with the given person in an available room IF THERE IS ONE
-
-        return view('reservation.success', ['reservation' => $reservation]);
+        return view('reservation.success',
+            ['reservations' => $reservations,
+            'hotel' => $hotel->name,
+            'price' => $hotel->price * count($reservations)
+            ]);
     }
 
     public function search()
     {
         return view('reservation.search');
     }
+
+
 }

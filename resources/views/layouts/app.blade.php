@@ -87,6 +87,10 @@
                 Hotell | Aplia
             </div>
 
+            <div class="m-b-md">
+                Ruben Bratsberg
+            </div>
+
             <div class="links">
                 <a href="/reservation/create">Reservasjon</a>
                 <a href="/reservation/search">Søk</a>
